@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import PageWrapper from '@/Components/PageWrapper';
 import { PageProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import DeleteUserForm from './Partials/DeleteUserForm';
@@ -8,19 +9,14 @@ import UpdateProfileInformationForm from './Partials/UpdateProfileInformationFor
 export default function Edit({
     mustVerifyEmail,
     status,
+    auth,
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Profile
-                </h2>
-            }
-        >
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Profile" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+            <div className="space-y-6">
+                <PageWrapper title="Profile Information">
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
@@ -28,15 +24,19 @@ export default function Edit({
                             className="max-w-xl"
                         />
                     </div>
+                </PageWrapper>
 
+                <PageWrapper title="Update Password">
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
                         <UpdatePasswordForm className="max-w-xl" />
                     </div>
+                </PageWrapper>
 
+                <PageWrapper title="Delete Account">
                     <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
                         <DeleteUserForm className="max-w-xl" />
                     </div>
-                </div>
+                </PageWrapper>
             </div>
         </AuthenticatedLayout>
     );

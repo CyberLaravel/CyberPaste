@@ -1,19 +1,36 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import { Link } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
 
-export default function Guest({ children }: PropsWithChildren) {
+export default function GuestLayout({ children }: PropsWithChildren) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0 dark:bg-gray-900">
-            <div>
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
-                </Link>
+        <div className="min-h-screen bg-gray-900 font-['Orbitron']">
+            {/* Navbar */}
+            <nav className="bg-gray-800/50 px-6 py-4 backdrop-blur-sm">
+                <div className="mx-auto max-w-7xl">
+                    <div className="flex items-center justify-between">
+                        <Link
+                            href="/"
+                            className="glitch-effect relative text-2xl font-bold text-yellow-400"
+                        >
+                            CyberApp
+                        </Link>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Main Content */}
+            <div className="flex min-h-[calc(100vh-9rem)] items-center justify-center p-6">
+                <div className="mx-auto w-full max-w-2xl space-y-6 bg-gray-800/50 p-8 backdrop-blur-sm">
+                    {children}
+                </div>
             </div>
 
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg dark:bg-gray-800">
-                {children}
-            </div>
+            {/* Footer */}
+            <footer className="bg-gray-800/50 px-6 py-4 backdrop-blur-sm">
+                <div className="mx-auto max-w-7xl text-center text-blue-300">
+                    <p>© 2024 CyberApp. All rights reserved.</p>
+                </div>
+            </footer>
         </div>
     );
 }
