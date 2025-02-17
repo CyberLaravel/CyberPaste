@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Paste;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     $recentPastes = Paste::whereNull('password')
@@ -21,8 +22,15 @@ Route::get('/', function () {
             'created_at' => $paste->created_at
         ]);
 
+    $stats = [
+        'totalPastes' => Paste::count(),
+        'totalUsers' => \App\Models\User::count(),
+        'languagesUsed' => 15, // Or dynamically count unique languages
+    ];
+
     return Inertia::render('Welcome', [
         'recentPastes' => $recentPastes,
+        'stats' => $stats,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -30,14 +38,16 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/pastes/{slug}', [PasteController::class, 'destroy'])
+        ->name('pastes.destroy');
 });
 
 Route::get('/pastes/create', [PasteController::class, 'create'])->name('pastes.create');
@@ -52,5 +62,13 @@ Route::middleware('web')->group(function () {
         ->middleware('auth')
         ->name('pastes.content');
 });
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+})->name('terms');
+
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
+})->name('privacy');
 
 require __DIR__ . '/auth.php';

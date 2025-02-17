@@ -103,4 +103,16 @@ class PasteController extends Controller
             'message' => 'Content retrieved successfully'
         ]);
     }
+
+    public function destroy($slug)
+    {
+        $paste = Paste::where('slug', $slug)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $paste->delete();
+
+        return redirect()->route('dashboard')
+            ->with('message', 'Paste deleted successfully');
+    }
 }

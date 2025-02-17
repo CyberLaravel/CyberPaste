@@ -10,6 +10,7 @@
         "@headlessui/react": "^2.0.0",
         "@inertiajs/react": "^2.0.0",
         "@tailwindcss/forms": "^0.5.3",
+        "@types/lodash": "^4.17.15",
         "@types/node": "^18.13.0",
         "@types/prismjs": "^1.26.5",
         "@types/react": "^18.0.28",
@@ -37,6 +38,7 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
+        "framer-motion": "^12.4.3",
         "prismjs": "^1.29.0"
     }
 }

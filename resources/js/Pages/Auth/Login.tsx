@@ -1,110 +1,123 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
-import { PageProps } from '@/types';
+import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
-export default function Login({
-    status,
-    canResetPassword,
-}: PageProps) {
+export default function Login({ status }: { status?: string }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
-        remember: false as boolean,
+        remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+    useEffect(() => {
+        return () => {
+            reset('password');
+        };
+    }, []);
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('login'));
     };
 
     return (
         <GuestLayout>
             <Head title="Log in" />
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-400">
-                    {status}
-                </div>
-            )}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-lg bg-gray-800/50 p-8 backdrop-blur-sm"
+            >
+                <h2 className="mb-6 text-2xl font-bold text-yellow-400">
+                    Login
+                </h2>
 
-            <form onSubmit={submit}>
-                <div className="space-y-6">
+                {status && (
+                    <div className="mb-4 text-sm text-blue-300">{status}</div>
+                )}
+
+                <form onSubmit={submit} className="space-y-6">
                     <div>
-                        <InputLabel htmlFor="email" value="Email" />
-
-                        <TextInput
-                            id="email"
+                        <label className="block text-sm text-gray-300">
+                            Email
+                        </label>
+                        <input
                             type="email"
-                            name="email"
                             value={data.email}
-                            className="mt-1 block w-full"
                             autoComplete="username"
-                            isFocused={true}
                             onChange={(e) => setData('email', e.target.value)}
+                            className="mt-1 w-full bg-gray-900/50 px-4 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
                         />
-
-                        <InputError message={errors.email} className="mt-2" />
+                        {errors.email && (
+                            <div className="mt-1 text-sm text-red-500">
+                                {errors.email}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="mt-4">
-                        <InputLabel htmlFor="password" value="Password" />
-
-                        <TextInput
-                            id="password"
+                    <div>
+                        <label className="block text-sm text-gray-300">
+                            Password
+                        </label>
+                        <input
                             type="password"
-                            name="password"
                             value={data.password}
-                            className="mt-1 block w-full"
                             autoComplete="current-password"
-                            onChange={(e) => setData('password', e.target.value)}
+                            onChange={(e) =>
+                                setData('password', e.target.value)
+                            }
+                            className="mt-1 w-full bg-gray-900/50 px-4 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-400/50"
                         />
-
-                        <InputError message={errors.password} className="mt-2" />
+                        {errors.password && (
+                            <div className="mt-1 text-sm text-red-500">
+                                {errors.password}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="mt-4 block">
+                    <div className="flex items-center justify-between">
                         <label className="flex items-center">
-                            <Checkbox
-                                name="remember"
+                            <input
+                                type="checkbox"
                                 checked={data.remember}
                                 onChange={(e) =>
-                                    setData(
-                                        'remember',
-                                        (e.target.checked || false) as false,
-                                    )
+                                    setData('remember', e.target.checked)
                                 }
+                                className="rounded border-gray-700 bg-gray-900/50 text-yellow-400 focus:ring-yellow-400/50"
                             />
-                            <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
+                            <span className="ml-2 text-sm text-gray-300">
                                 Remember me
                             </span>
                         </label>
+
+                        <Link
+                            href={route('password.request')}
+                            className="text-sm text-blue-300 transition-colors hover:text-yellow-400"
+                        >
+                            Forgot password?
+                        </Link>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-end">
-                        {canResetPassword && (
-                            <Link
-                                href={route('password.request')}
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                            >
-                                Forgot your password?
-                            </Link>
-                        )}
+                    <div className="flex items-center justify-end gap-4">
+                        <Link
+                            href={route('register')}
+                            className="text-sm text-blue-300 transition-colors hover:text-yellow-400"
+                        >
+                            Need an account?
+                        </Link>
 
-                        <PrimaryButton className="ms-4" disabled={processing}>
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="bg-yellow-400 px-4 py-2 text-black transition-colors hover:bg-yellow-300 disabled:opacity-50"
+                        >
                             Log in
-                        </PrimaryButton>
+                        </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </motion.div>
         </GuestLayout>
     );
 }

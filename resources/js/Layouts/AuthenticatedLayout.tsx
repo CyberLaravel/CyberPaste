@@ -3,7 +3,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, useState } from 'react';
 
 interface Props extends PropsWithChildren {
-    user: User;
+    user: User | null;
 }
 
 export default function AuthenticatedLayout({ user, children }: Props) {
@@ -39,7 +39,7 @@ export default function AuthenticatedLayout({ user, children }: Props) {
                                     }
                                     className="flex items-center space-x-3 text-blue-300 transition-colors hover:text-yellow-400"
                                 >
-                                    <span>{user.name}</span>
+                                    <span>{user?.name}</span>
                                     <svg
                                         className="h-5 w-5"
                                         viewBox="0 0 20 20"

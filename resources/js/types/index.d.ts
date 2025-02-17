@@ -1,10 +1,17 @@
 import { Config } from 'ziggy-js';
 
+declare global {
+    function route(
+        name: string,
+        params?: string | Record<string, string | number | boolean>,
+    ): string;
+}
+
 export interface User {
     id: number;
     name: string;
     email: string;
-    email_verified_at: string | null;
+    email_verified_at?: string | null;
 }
 
 export type PageProps<
@@ -12,6 +19,9 @@ export type PageProps<
 > = T & {
     auth: {
         user: User | null;
+        flash?: {
+            message?: string;
+        };
     };
     ziggy: Config & { location: string };
 };

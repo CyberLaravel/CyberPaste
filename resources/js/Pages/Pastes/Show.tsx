@@ -1,5 +1,6 @@
 import ErrorBoundary from '@/Components/ErrorBoundary';
 import GuestPaste from '@/Components/GuestPaste';
+import Modal from '@/Components/Modal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head, router } from '@inertiajs/react';
@@ -38,6 +39,7 @@ export default function Show({ auth, paste: initialPaste }: Props) {
     const [error, setError] = useState('');
     const [copyStatus, setCopyStatus] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
@@ -89,6 +91,16 @@ export default function Show({ auth, paste: initialPaste }: Props) {
             }
             document.body.removeChild(textarea);
             setTimeout(() => setCopyStatus(''), 2000);
+        }
+    };
+
+    const handleCopyLink = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            setCopyStatus('Link copied!');
+            setTimeout(() => setCopyStatus(''), 2000);
+        } catch (error) {
+            setCopyStatus('Failed to copy');
         }
     };
 
@@ -171,6 +183,12 @@ export default function Show({ auth, paste: initialPaste }: Props) {
 
                     <div className="flex justify-end gap-4">
                         <button
+                            onClick={() => setIsShareModalOpen(true)}
+                            className="text-blue-300 transition-colors hover:text-yellow-400"
+                        >
+                            Share
+                        </button>
+                        <button
                             onClick={handleCopy}
                             className="text-blue-300 transition-colors hover:text-yellow-400"
                         >
@@ -184,6 +202,58 @@ export default function Show({ auth, paste: initialPaste }: Props) {
                         </button>
                     </div>
                 </article>
+
+                <Modal
+                    show={isShareModalOpen}
+                    onClose={() => setIsShareModalOpen(false)}
+                >
+                    <div className="space-y-6 p-6">
+                        <h3 className="text-lg font-bold text-yellow-400">
+                            Share Paste
+                        </h3>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="mb-1 block text-sm text-gray-400">
+                                    Direct Link
+                                </label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={window.location.href}
+                                        className="w-full bg-gray-900/50 px-4 py-2 text-gray-100"
+                                    />
+                                    <button
+                                        onClick={handleCopyLink}
+                                        className="bg-yellow-400 px-4 py-2 text-black transition-colors hover:bg-yellow-300"
+                                    >
+                                        {copyStatus || 'Copy'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <a
+                                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-blue-400 px-4 py-2 text-white transition-colors hover:bg-blue-500"
+                                >
+                                    Share on Twitter
+                                </a>
+                                <a
+                                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+                                >
+                                    Share on LinkedIn
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
             </AuthenticatedLayout>
         </ErrorBoundary>
     );
