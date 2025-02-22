@@ -3,19 +3,11 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo } from 'react';
 
-interface FormData {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-    terms: boolean;
-}
-
 const getPasswordStrength = (password: string): [number, string] => {
     if (!password) return [0, ''];
 
     let strength = 0;
-    let feedback = [];
+    const feedback = [];
 
     if (password.length >= 8) strength += 25;
     if (/[A-Z]/.test(password)) strength += 25;
@@ -29,14 +21,19 @@ const getPasswordStrength = (password: string): [number, string] => {
 };
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } =
-        useForm<FormData>({
-            name: '',
-            email: '',
-            password: '',
-            password_confirmation: '',
-            terms: false,
-        });
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        name: string;
+        email: string;
+        password: string;
+        password_confirmation: string;
+        terms: boolean;
+    }>({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        terms: false,
+    });
 
     useEffect(() => {
         return () => {
@@ -163,9 +160,9 @@ export default function Register() {
                             <input
                                 type="checkbox"
                                 checked={data.terms}
-                                onChange={(e) =>
-                                    setData('terms', e.target.checked)
-                                }
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => setData('terms', e.target.checked)}
                                 className="mt-1 rounded border-gray-700 bg-gray-900/50 text-yellow-400 focus:ring-yellow-400/50"
                             />
                             <span className="text-sm text-gray-300">

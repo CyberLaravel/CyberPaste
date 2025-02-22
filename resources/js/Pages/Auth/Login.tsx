@@ -4,7 +4,11 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
 export default function Login({ status }: { status?: string }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        email: string;
+        password: string;
+        remember: boolean;
+    }>({
         email: '',
         password: '',
         remember: false,
@@ -82,9 +86,9 @@ export default function Login({ status }: { status?: string }) {
                             <input
                                 type="checkbox"
                                 checked={data.remember}
-                                onChange={(e) =>
-                                    setData('remember', e.target.checked)
-                                }
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                ) => setData('remember', e.target.checked)}
                                 className="rounded border-gray-700 bg-gray-900/50 text-yellow-400 focus:ring-yellow-400/50"
                             />
                             <span className="ml-2 text-sm text-gray-300">
