@@ -1,3 +1,6 @@
+> ⚠️ **Development Status**: This project is currently under active development and is not ready for production use. Features may be incomplete or subject to change.
+
+
 # CyberPaste
 
 A modern code sharing platform with cyberpunk aesthetics.
